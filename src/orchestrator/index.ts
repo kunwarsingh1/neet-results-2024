@@ -33,8 +33,10 @@ app.get("/next", async (req, res) => {
 
 app.post("/result", async (req, res) => {
   const { applicationNumber, candidateName, allIndiaRank, day, month, year, marks } = req.body;
+  const worker_data = { applicationNumber, candidateName, allIndiaRank, day, month, year, marks };
   const result = await sendRequest(day, month, year, applicationNumber);
 
+  if(worker_data.applicationNumber === result.applicationNumber && worker_data.candidateName === result.candidateName && worker_data.allIndiaRank === result.allIndiaRank){ 
   if (!result.solved) {
     return res.status(400).json({ error: "Application not found" });
   }
@@ -62,6 +64,7 @@ app.post("/result", async (req, res) => {
 //   });
 
   res.json({});
+  }
 });
 
 app.listen(3000, () => {
