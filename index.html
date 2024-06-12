@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Ranks</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Candidate Ranks</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Application Number</th>
+                <th>Candidate Name</th>
+                <th>All India Rank</th>
+                <th>Marks</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="candidateTableBody">
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        fetch('/scrape.json')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('candidateTableBody');
+
+                data.total.sort((a, b) => parseInt(a.allIndiaRank) - parseInt(b.allIndiaRank));
+
+                data.total.forEach(candidate => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${candidate.applicationNumber}</td>
+                        <td>${candidate.candidateName}</td>
+                        <td>${candidate.allIndiaRank}</td>
+                        <td>${candidate.marks}</td>
+                        <td>${candidate.day}/${candidate.month}/${candidate.year}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
+
